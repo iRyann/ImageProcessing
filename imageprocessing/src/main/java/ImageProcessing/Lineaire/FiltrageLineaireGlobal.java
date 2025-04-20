@@ -3,8 +3,19 @@ package ImageProcessing.Lineaire;
 import ImageProcessing.Fourier.Fourier;
 import ImageProcessing.Complexe.*;
 import ImageProcessing.Utilities.MyCast;
+
 public class FiltrageLineaireGlobal {
 
+    /**
+     * Filtre passe bas idéal
+     * @param image
+     * @param frequenceCoupure
+     * @return int[][]
+     * @author Ryan Bouchou
+     * @date 2025-04-20
+     * @version 1.0
+     * @description Filtre passe bas idéal
+     */
     public static int[][] filtrePasseBasIdeal(int[][] image, int frequenceCoupure){
 
         int row = image.length;
@@ -24,6 +35,16 @@ public class FiltrageLineaireGlobal {
         return MyCast.toIntArray(Fourier.InverseFourier2D(fourierImage).getPartieReelle());
     }
 
+    /**
+     * Filtre passe haut idéal
+     * @param image
+     * @param frequenceCoupure
+     * @return int[][]
+     * @author Ryan Bouchou
+     * @date 2025-04-20
+     * @version 1.0
+     * @description Filtre passe haut idéal
+     */
     public static int[][] filtrePasseHautIdeal(int[][] image, int frequenceCoupure) {
         int row = image.length;
         int column = image[0].length;
@@ -42,6 +63,17 @@ public class FiltrageLineaireGlobal {
         return MyCast.toIntArray(Fourier.InverseFourier2D(fourierImage).getPartieReelle());
     }
 
+    /**
+     * Filtre passe bas Butterworth
+     * @param image
+     * @param frequenceCoupure
+     * @param ordre
+     * @return int[][]
+     * @author Ryan Bouchou
+     * @date 2025-04-20
+     * @version 1.0
+     * @description Filtre passe bas Butterworth
+     */
     public static int[][] filtrePasseBasButterworth(int[][] image, int frequenceCoupure, int ordre) {
         int row = image.length;
         int column = image[0].length;
@@ -59,7 +91,17 @@ public class FiltrageLineaireGlobal {
         return MyCast.toIntArray(Fourier.InverseFourier2D(fourierImage).getPartieReelle());
     }
     
-
+    /**
+     * Filtre passe haut Butterworth
+     * @param image
+     * @param frequenceCoupure
+     * @param ordre
+     * @return int[][]
+     * @author Ryan Bouchou
+     * @date 2025-04-20
+     * @version 1.0
+     * @description Filtre passe haut Butterworth
+     */
     public static int[][] filtrePasseHautButterworth(int[][] image, int frequenceCoupure, int ordre){
 
         int row = image.length;

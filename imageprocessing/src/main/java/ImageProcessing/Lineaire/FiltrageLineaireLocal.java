@@ -1,6 +1,17 @@
 package ImageProcessing.Lineaire;
 
 public class FiltrageLineaireLocal {
+
+    /**
+     * Filtre de convolution
+     * @param image
+     * @param masque
+     * @return int[][]
+     * @author Ryan Bouchou
+     * @date 2025-04-20
+     * @version 1.0
+     * @description Filtre de convolution
+     */
     public static int[][] filtreMasqueConvolution(int[][] image, double [][] masque){
 
         int rows = image.length;
@@ -32,6 +43,16 @@ public class FiltrageLineaireLocal {
         return imageFiltered;
     }
 
+    /**
+     * Filtre de moyenneur
+     * @param image
+     * @param tailleMasque
+     * @return int[][]
+     * @author Ryan Bouchou
+     * @date 2025-04-20
+     * @version 1.0
+     * @description Filtre de moyenneur
+     */
     public static int[][] filtreMoyenneur(int[][] image, int tailleMasque){
 
         double[][] masque = new double[tailleMasque][tailleMasque];

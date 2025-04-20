@@ -2,6 +2,12 @@ package ImageProcessing.Utilities;
 
 public class MyCast {
     
+    /**
+     * Convert a 2D double array to a 2D int array.
+     * 
+     * @param array the 2D double array to convert
+     * @return the converted 2D int array
+     */
     public static int[][] toIntArray(double[][] array) {
         int rows = array.length;
         int cols = array[0].length;
@@ -15,6 +21,12 @@ public class MyCast {
         return intArray;
     }
 
+    /**
+     * Convert a 2D int array to a 2D double array.
+     * 
+     * @param array the 2D int array to convert
+     * @return the converted 2D double array
+     */
     public static double[][] toDoubleArray(int[][] array) {
         int rows = array.length;
         int cols = array[0].length;
