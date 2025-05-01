@@ -33,5 +33,19 @@ public class Generic {
     
         return TypeImage.BINARY;
     }
+
+    public static int[][] inverse(int[][] image) {
+        int rows = image.length;
+        int cols = image[0].length;
+        int[][] inverseImage = new int[rows][cols];
+        int maxValue = kindImage(inverseImage) == TypeImage.GRAY ? 255 : 1;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                inverseImage[i][j] = maxValue - image[i][j];
+            }
+        }
+        
+        return inverseImage;
+    }
     
 }

@@ -7,6 +7,7 @@ import javax.management.RuntimeErrorException;
 import ImageProcessing.Complexe.Complexe;
 import ImageProcessing.Fourier.Fourier;
 import ImageProcessing.Utilities.MyCast;
+import ImageProcessing.Lineaire.Generic;
 
 public class MorphoElementaire {
 
@@ -61,6 +62,13 @@ public class MorphoElementaire {
         
         return res;
     }
+
+    public static int[][] dilatationByErosion(int [][] image,int tailleMasque){
+        int[][] inverse = Generic.inverse(image);
+        int[][] res = Generic.inverse(erosion(inverse, tailleMasque));
+        return res;
+    }
+
     public static int[][] ouverture(int [][] image,int tailleMasque){
         // TODO - implement MorphoElementaire.ouverture
         throw new UnsupportedOperationException("Not yet implemented");
