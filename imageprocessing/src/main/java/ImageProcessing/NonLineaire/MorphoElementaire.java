@@ -1,12 +1,4 @@
 package ImageProcessing.NonLineaire;
-
-import ImageProcessing.Complexe.MatriceComplexe;
-
-import javax.management.RuntimeErrorException;
-
-import ImageProcessing.Complexe.Complexe;
-import ImageProcessing.Fourier.Fourier;
-import ImageProcessing.Utilities.MyCast;
 import ImageProcessing.Lineaire.Generic;
 
 public class MorphoElementaire {
