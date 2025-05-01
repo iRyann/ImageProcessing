@@ -70,11 +70,9 @@ public class MorphoElementaire {
     }
 
     public static int[][] ouverture(int [][] image,int tailleMasque){
-        // TODO - implement MorphoElementaire.ouverture
-        throw new UnsupportedOperationException("Not yet implemented");
+        return dilatation(erosion(image, tailleMasque), tailleMasque);
     }
     public static int[][] fermeture(int [][] image,int tailleMasque){
-        // TODO - implement MorphoElementaire.fermeture
-        throw new UnsupportedOperationException("Not yet implemented");
+        return erosion(dilatation(image, tailleMasque), tailleMasque);
     }
 }
