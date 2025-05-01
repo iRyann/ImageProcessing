@@ -22,10 +22,10 @@ public class MorphoElementaire {
                 }
 
                 int min = 255;
-                for (int k = -half; k <= half; k++) {
-                    for (int l = -half; l <= half; l++) {
-                        if (image[i + k][j + l] < min) {
-                            min = image[i + k][j + l];
+                for (int dx = -half; dx <= half; dx++) {
+                    for (int dy = -half; dy <= half; dy++) {
+                        if (image[i + dx][j + dy] < min) {
+                            min = image[i + dx][j + dy];
                         }
                     }
                 }
@@ -37,8 +37,29 @@ public class MorphoElementaire {
     }
 
     public static int[][] dilatation(int [][] image,int tailleMasque){
-        // TODO - implement MorphoElementaire.dilatation
-        throw new UnsupportedOperationException("Not yet implemented");
+        int half = tailleMasque / 2;
+        int[][] res = new int[image.length][image[0].length];
+
+        for (int i = 0; i < image.length; i++) {
+            for (int j = 0; j < image[0].length; j++) {
+                if (i < half || i >= image.length - half || j < half || j >= image[0].length - half) {
+                    res[i][j] = 0;
+                    continue;
+                }
+
+                int max = 0;
+                for (int dx = -half; dx <= half; dx++) {
+                    for (int dy = -half; dy <= half; dy++) {
+                        if (image[i + dx][j + dy] > max) {
+                            max = image[i + dx][j + dy];
+                        }
+                    }
+                }
+                res[i][j] = max;
+            }
+        }
+        
+        return res;
     }
     public static int[][] ouverture(int [][] image,int tailleMasque){
         // TODO - implement MorphoElementaire.ouverture
