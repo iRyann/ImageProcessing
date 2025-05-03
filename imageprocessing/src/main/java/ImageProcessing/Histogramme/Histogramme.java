@@ -72,4 +72,58 @@ public class Histogramme
             return (max - min) / (double) max;
         }
     }
+
+    public static int[][] rehaussement(int[][] image, int[] courbeTonale){
+        int[][] newImage = new int[image.length][image[0].length];
+        for (int i = 0; i < image.length; i++) {
+            for (int j = 0; j < image[i].length; j++) {
+                newImage[i][j] = courbeTonale[image[i][j]];
+            }
+        }
+        return newImage;
+    }
+
+    public static int[] creeCourbeTonaleLineaireSaturation(int smin, int smax){
+        int[] courbeTonale = new int[256];
+        for (int i = 0; i < 256; i++) {
+            if (i < smin) {
+                courbeTonale[i] = 0;
+            } else if (i > smax) {
+                courbeTonale[i] = 255;
+            } else {
+                courbeTonale[i] = (int) ((i - smin) * 255.0 / (smax - smin));
+            }
+        }
+        return courbeTonale;
+    }
+
+    public static int[] creeCourbeTonaleGamma(double gamma){
+        int[] courbeTonale = new int[256];
+        for (int i = 0; i < 256; i++) {
+            courbeTonale[i] = (int) (255 * Math.pow(i / 255.0, gamma));
+        }
+        return courbeTonale;
+    }
+
+    public static int[] creeCourbeTonaleNegatif(){
+        int[] courbeTonale = new int[256];
+        for (int i = 0; i < 256; i++) {
+            courbeTonale[i] = 255 - i;
+        }
+        return courbeTonale;
+    }
+
+    public static int[] creeCourbeTonaleEgalisation(int[][] image){
+        int[] histo = Histogramme256(image);
+        int[] courbeTonale = new int[256];
+        int totalPixels = image.length * image[0].length;
+        double cumulativeSum = 0.0;
+        
+        for (int i = 0; i < 256; i++) {
+            cumulativeSum += histo[i];
+            courbeTonale[i] = (int) Math.round((cumulativeSum / totalPixels) * 255);
+        }
+        
+        return courbeTonale;
+    }
 }
