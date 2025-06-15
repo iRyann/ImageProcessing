@@ -12,6 +12,7 @@ public class JDialogFiltrageLineaire extends javax.swing.JDialog {
 
     private String texteAAfficher;
     private double value = 0.0;
+    private String textValue = "";
     /**
      * Creates new form JDialogFiltrageLineaire
      */
@@ -31,6 +32,10 @@ public class JDialogFiltrageLineaire extends javax.swing.JDialog {
 
     public double getValue() {
         return value;
+    }
+
+    public String getText() {
+        return textValue;
     }
 
     /**
@@ -99,13 +104,23 @@ public class JDialogFiltrageLineaire extends javax.swing.JDialog {
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
-        value = Double.parseDouble(jTextField1.getText());
+        try {
+            value = Double.parseDouble(jTextField1.getText());
+        } catch (Exception e) {
+            value = 0.0;
+        }
+        textValue = jTextField1.getText();
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
 
-        value = Double.parseDouble(jTextField1.getText());
+        try {
+            value = Double.parseDouble(jTextField1.getText());
+        } catch (NumberFormatException e) {
+            value = 0.0;
+        }
+        textValue = jTextField1.getText();
         setVisible(false);
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed

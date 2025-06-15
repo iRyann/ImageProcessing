@@ -9,6 +9,11 @@
         <Property name="text" type="java.lang.String" value="jMenuItem6"/>
       </Properties>
     </Component>
+    <Component class="javax.swing.JMenuItem" name="jMenuItem1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jMenuItem1"/>
+      </Properties>
+    </Component>
     <Menu class="javax.swing.JMenuBar" name="jMenuBar1">
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="jMenuImage">
@@ -245,6 +250,46 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuHistogrammeAfficherParamImageActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemRehaussement">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="R&#xe9;haussement"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemRehaussementActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemCourbeTonaleLineaireSaturation">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Courbe tonale lin&#xe9;aire saturation"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemCourbeTonaleLineaireSaturationActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemCourbeTonaleGamma">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Courbe tonale gamma"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemCourbeTonaleGammaActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemCourbeTonaleNegatif">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Courbe tonale n&#xe9;gatif"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemCourbeTonaleNegatifActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemCourbeTonaleEgalisation">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Courbe tonale egalisation"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemCourbeTonaleEgalisationActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>

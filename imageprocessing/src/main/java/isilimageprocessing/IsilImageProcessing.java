@@ -14,9 +14,11 @@ import ImageProcessing.Lineaire.FiltrageLineaireLocal;
 import ImageProcessing.NonLineaire.MorphoComplexe;
 import ImageProcessing.NonLineaire.MorphoElementaire;
 import ImageProcessing.Seuillage.Seuillage;
+import ImageProcessing.Utilities.MatrixHelper;
 import isilimageprocessing.Dialogues.*;
 import java.awt.*;
 import java.io.*;
+import java.util.Arrays;
 import javax.swing.*;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
@@ -39,6 +41,8 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
     private JLabelBeanCImage observer;
     private Color couleurPinceauRGB;
     private int   couleurPinceauNG;
+
+    private int[] courbeTonale;
     
     /** Creates new form TestCImage2 */
     public IsilImageProcessing() 
@@ -76,6 +80,7 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
 
         buttonGroupDessiner = new javax.swing.ButtonGroup();
         jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jScrollPane = new javax.swing.JScrollPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuImage = new javax.swing.JMenu();
@@ -106,6 +111,11 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
         jMenuHistogramme = new javax.swing.JMenu();
         jMenuHistogrammeAfficher = new javax.swing.JMenuItem();
         jMenuHistogrammeAfficherParamImage = new javax.swing.JMenuItem();
+        jMenuItemRehaussement = new javax.swing.JMenuItem();
+        jMenuItemCourbeTonaleLineaireSaturation = new javax.swing.JMenuItem();
+        jMenuItemCourbeTonaleGamma = new javax.swing.JMenuItem();
+        jMenuItemCourbeTonaleNegatif = new javax.swing.JMenuItem();
+        jMenuItemCourbeTonaleEgalisation = new javax.swing.JMenuItem();
         jMenuFiltrageLineaire = new javax.swing.JMenu();
         jMenuFiltrageLineaireGlobal = new javax.swing.JMenu();
         jMenuItemFiltrePasseBasIdeal = new javax.swing.JMenuItem();
@@ -142,6 +152,8 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
         jMenuItemSeuillageAutomatique = new javax.swing.JMenuItem();
 
         jMenuItem6.setText("jMenuItem6");
+
+        jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Isil Image Processing");
@@ -336,6 +348,46 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
             }
         });
         jMenuHistogramme.add(jMenuHistogrammeAfficherParamImage);
+
+        jMenuItemRehaussement.setText("Réhaussement");
+        jMenuItemRehaussement.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemRehaussementActionPerformed(evt);
+            }
+        });
+        jMenuHistogramme.add(jMenuItemRehaussement);
+
+        jMenuItemCourbeTonaleLineaireSaturation.setText("Courbe tonale linéaire saturation");
+        jMenuItemCourbeTonaleLineaireSaturation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemCourbeTonaleLineaireSaturationActionPerformed(evt);
+            }
+        });
+        jMenuHistogramme.add(jMenuItemCourbeTonaleLineaireSaturation);
+
+        jMenuItemCourbeTonaleGamma.setText("Courbe tonale gamma");
+        jMenuItemCourbeTonaleGamma.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemCourbeTonaleGammaActionPerformed(evt);
+            }
+        });
+        jMenuHistogramme.add(jMenuItemCourbeTonaleGamma);
+
+        jMenuItemCourbeTonaleNegatif.setText("Courbe tonale négatif");
+        jMenuItemCourbeTonaleNegatif.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemCourbeTonaleNegatifActionPerformed(evt);
+            }
+        });
+        jMenuHistogramme.add(jMenuItemCourbeTonaleNegatif);
+
+        jMenuItemCourbeTonaleEgalisation.setText("Courbe tonale egalisation");
+        jMenuItemCourbeTonaleEgalisation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemCourbeTonaleEgalisationActionPerformed(evt);
+            }
+        });
+        jMenuHistogramme.add(jMenuItemCourbeTonaleEgalisation);
 
         jMenuBar1.add(jMenuHistogramme);
 
@@ -974,10 +1026,10 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
             int frequenceCoupure = (int) freq;
 
 
-            JDialogFiltrageLineaire filtrageLineaire2 = new JDialogFiltrageLineaire(this,true, "Entrer l'ordre");
-            filtrageLineaire2.setVisible(true);
+            JDialogFiltrageLineaire dialog2 = new JDialogFiltrageLineaire(this,true, "Entrer l'ordre");
+            dialog2.setVisible(true);
 
-            double o = filtrageLineaire2.getValue();
+            double o = dialog2.getValue();
             int ordre = (int) o;
 
             int[][] imageFiltree = FiltrageLineaireGlobal.filtrePasseBasButterworth(imageNG.getMatrice(), frequenceCoupure, ordre);
@@ -1015,15 +1067,20 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
     private void jMenuItemMasqueConvolutionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemMasqueConvolutionActionPerformed
         // TODO add your handling code here:
         try {
-            JDialogFiltrageLineaire dialog = new JDialogFiltrageLineaire(this,true, "Entrer la frequence de coupure");
+            JDialogFiltrageLineaire dialog = new JDialogFiltrageLineaire(this,true, "Entrer la matrice de convolution : ',' pour séparer les colonnes, ';' pour séparer les lignes");
             dialog.setVisible(true);
 
-            double freq = dialog.getValue();
-            int frequenceCoupure = (int) freq;
+            String text = dialog.getText();
+//            System.out.println(text);
+
+            // avoir la matrice depuis le texte
+            double[][] matConvolution = MatrixHelper.getDoubleMatrixFromText(text);
+
+            System.out.println("Matrice de convolution : " + Arrays.deepToString(matConvolution));
 
 
-            int[][] imageFiltree = FiltrageLineaireLocal.filtreMasqueConvolution(imageNG.getMatrice(), new double[frequenceCoupure][frequenceCoupure]);
-            System.out.println("Filtrage lineaire passe bas Butterworth effectue");
+            int[][] imageFiltree = FiltrageLineaireLocal.filtreMasqueConvolution(imageNG.getMatrice(), matConvolution);
+            System.out.println("Filtrage lineaire masque convolution effectue");
             imageNG.setMatrice(imageFiltree);
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
@@ -1121,20 +1178,20 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
 
     private void jMenuItemReconstructionGeodesiqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemReconstructionGeodesiqueActionPerformed
         // TODO add your handling code here:
-//        try {
-//            JDialogFiltrageLineaire dialog = new JDialogFiltrageLineaire(this,true, "Entrer la taille du masque");
-//            dialog.setVisible(true);
-//
-//            double v = dialog.getValue();
-//            int tailleMasque = (int) v;
-//
-//
-//            int[][] imageFiltree = MorphoComplexe.reconstructionGeodesique(imageNG.getMatrice(), )
-//            System.out.println("Morpho elementaire erosion effectuee");
-//            imageNG.setMatrice(imageFiltree);
-//        } catch (CImageNGException e) {
-//            System.out.println("CImageNGException : " + e.getMessage());
-//        }
+        try {
+            JDialogFiltrageLineaire dialog = new JDialogFiltrageLineaire(this,true, "Entrer la matrice du masque");
+            dialog.setVisible(true);
+
+            String text = dialog.getText();
+            int[][] masque = MatrixHelper.getIntMatrixFromText(text);
+
+
+            int[][] imageFiltree = MorphoComplexe.reconstructionGeodesique(imageNG.getMatrice(), masque);
+            System.out.println("Morpho elementaire erosion effectuee");
+            imageNG.setMatrice(imageFiltree);
+        } catch (CImageNGException e) {
+            System.out.println("CImageNGException : " + e.getMessage());
+        }
     }//GEN-LAST:event_jMenuItemReconstructionGeodesiqueActionPerformed
 
     private void jMenuItemFiltreMedianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFiltreMedianActionPerformed
@@ -1156,20 +1213,20 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
 
     private void jMenuItemDilatationGeodesiqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemDilatationGeodesiqueActionPerformed
         // TODO add your handling code here:
-//        try {
-//            JDialogFiltrageLineaire dialog = new JDialogFiltrageLineaire(this,true, "Entrer la taille du masque");
-//            dialog.setVisible(true);
-//
-//            double v = dialog.getValue();
-//            int tailleMasque = (int) v;
-//
-//
-//            int[][] imageFiltree = MorphoComplexe.dilatationGeodesique(imageNG.getMatrice(), , );
-//            System.out.println("Morpho elementaire erosion effectuee");
-//            imageNG.setMatrice(imageFiltree);
-//        } catch (CImageNGException e) {
-//            System.out.println("CImageNGException : " + e.getMessage());
-//        }
+        try {
+            JDialogFiltrageLineaire dialog = new JDialogFiltrageLineaire(this,true, "Entrer la matrice du masque");
+            dialog.setVisible(true);
+
+            String text = dialog.getText();
+            int[][] masque = MatrixHelper.getIntMatrixFromText(text);
+
+
+            int[][] imageFiltree = MorphoComplexe.dilatationGeodesique(imageNG.getMatrice(), masque, 10);
+            System.out.println("Morpho elementaire erosion effectuee");
+            imageNG.setMatrice(imageFiltree);
+        } catch (CImageNGException e) {
+            System.out.println("CImageNGException : " + e.getMessage());
+        }
     }//GEN-LAST:event_jMenuItemDilatationGeodesiqueActionPerformed
 
     private void jMenuItemGradientPrewittActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGradientPrewittActionPerformed
@@ -1183,7 +1240,7 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
 
 
             int[][] imageFiltree = ContoursLineaire.gradientPrewitt(imageNG.getMatrice(), tailleMasque);
-            System.out.println("Morpho elementaire erosion effectuee");
+            System.out.println("Contour lineaire gradient Prewitt effectuee");
             imageNG.setMatrice(imageFiltree);
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
@@ -1201,7 +1258,7 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
 
 
             int[][] imageFiltree = ContoursLineaire.gradientSobel(imageNG.getMatrice(), tailleMasque);
-            System.out.println("Morpho elementaire erosion effectuee");
+            System.out.println("Contour lineaire Sobel effectuee");
             imageNG.setMatrice(imageFiltree);
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
@@ -1365,12 +1422,77 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
 
 
 
-
-
-
-
-
     }//GEN-LAST:event_jMenuHistogrammeAfficherParamImageActionPerformed
+
+    private void jMenuItemCourbeTonaleLineaireSaturationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCourbeTonaleLineaireSaturationActionPerformed
+        // TODO add your handling code here:
+        try {
+            JDialogFiltrageLineaire dialog = new JDialogFiltrageLineaire(this,true, "Entrer la saturation minimum");
+            dialog.setVisible(true);
+
+            double smin = dialog.getValue();
+            int satmin = (int) smin;
+
+
+            JDialogFiltrageLineaire dialog2 = new JDialogFiltrageLineaire(this,true, "Entrer la saturation maximum");
+            dialog2.setVisible(true);
+
+            double smax = dialog2.getValue();
+            int satmax = (int) smax;
+
+
+            courbeTonale = Histogramme.creeCourbeTonaleLineaireSaturation(satmin, satmax);
+            System.out.println("Courbe tonale creee");
+        } catch (Exception e) {
+            System.out.println("CImageNGException : " + e.getMessage());
+        }
+
+    }//GEN-LAST:event_jMenuItemCourbeTonaleLineaireSaturationActionPerformed
+
+    private void jMenuItemRehaussementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemRehaussementActionPerformed
+        // TODO add your handling code here:
+        try {
+            if (courbeTonale == null) {
+                throw new RuntimeException("Pas de courbe tonale créée");
+            }
+            int[][] imageRehaussee = Histogramme.rehaussement(imageNG.getMatrice(), courbeTonale);
+            imageNG.setMatrice(imageRehaussee);
+        } catch (CImageNGException e) {
+            System.out.println("CImageNGException : " + e.getMessage());
+        }
+    }//GEN-LAST:event_jMenuItemRehaussementActionPerformed
+
+    private void jMenuItemCourbeTonaleGammaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCourbeTonaleGammaActionPerformed
+        // TODO add your handling code here:
+        try {
+            JDialogFiltrageLineaire dialog = new JDialogFiltrageLineaire(this,true, "Entrer le gamma");
+            dialog.setVisible(true);
+
+            double gamma = dialog.getValue();
+
+            courbeTonale = Histogramme.creeCourbeTonaleGamma(gamma);
+            System.out.println("Courbe tonale creee");
+
+        } catch (RuntimeException e) {
+
+        }
+    }//GEN-LAST:event_jMenuItemCourbeTonaleGammaActionPerformed
+
+    private void jMenuItemCourbeTonaleNegatifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCourbeTonaleNegatifActionPerformed
+        // TODO add your handling code here:
+        courbeTonale = Histogramme.creeCourbeTonaleNegatif();
+        System.out.println("Courbe tonale creee");
+    }//GEN-LAST:event_jMenuItemCourbeTonaleNegatifActionPerformed
+
+    private void jMenuItemCourbeTonaleEgalisationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCourbeTonaleEgalisationActionPerformed
+        // TODO add your handling code here:
+        try {
+            courbeTonale = Histogramme.creeCourbeTonaleEgalisation(imageNG.getMatrice());
+            System.out.println("Courbe tonale creee");
+        } catch (CImageNGException e) {
+            System.out.println("CImageNGException : " + e.getMessage());
+        }
+    }//GEN-LAST:event_jMenuItemCourbeTonaleEgalisationActionPerformed
     
     /**
      * @param args the command line arguments
@@ -1513,8 +1635,13 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
     private javax.swing.JMenuItem jMenuHistogrammeAfficher;
     private javax.swing.JMenuItem jMenuHistogrammeAfficherParamImage;
     private javax.swing.JMenu jMenuImage;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItemCouleurPinceau;
+    private javax.swing.JMenuItem jMenuItemCourbeTonaleEgalisation;
+    private javax.swing.JMenuItem jMenuItemCourbeTonaleGamma;
+    private javax.swing.JMenuItem jMenuItemCourbeTonaleLineaireSaturation;
+    private javax.swing.JMenuItem jMenuItemCourbeTonaleNegatif;
     private javax.swing.JMenuItem jMenuItemDilatation;
     private javax.swing.JMenuItem jMenuItemDilatationGeodesique;
     private javax.swing.JMenuItem jMenuItemEnregistrerSous;
@@ -1545,6 +1672,7 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
     private javax.swing.JMenuItem jMenuItemOuvrirNG;
     private javax.swing.JMenuItem jMenuItemOuvrirRGB;
     private javax.swing.JMenuItem jMenuItemReconstructionGeodesique;
+    private javax.swing.JMenuItem jMenuItemRehaussement;
     private javax.swing.JMenuItem jMenuItemSeuillageAutomatique;
     private javax.swing.JMenuItem jMenuItemSeuillageDouble;
     private javax.swing.JMenuItem jMenuItemSeuillageSimple;
