@@ -107,6 +107,13 @@ public class FiltrageLineaireGlobal {
         int row = image.length;
         int column = image[0].length;
 
+        if (frequenceCoupure <= 0) {
+            throw new IllegalArgumentException("La fréquence de coupure doit être supérieure à 0.");
+        }
+        if (ordre <= 0) {
+            throw new IllegalArgumentException("L'ordre doit être supérieur à 0.");
+        }
+
         MatriceComplexe fourierImage = Fourier.Fourier2D(MyCast.toDoubleArray(image));
 
         for (int i = 0; i < row; i++) {
