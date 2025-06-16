@@ -1,9 +1,5 @@
 package ImageProcessing.Seuillage;
 
-import java.lang.reflect.Array;
-
-import org.jfree.util.ArrayUtilities;
-
 public class Seuillage {
     public static int[][] seuillageSimple(int[][] image, int seuil){
         int rows = image.length;
@@ -24,15 +20,18 @@ public class Seuillage {
     }
 
     public static int[][] seuillageDouble(int[][] image,int seuil1, int seuil2){
+        if (seuil1 > seuil2) {
+            throw new IllegalArgumentException("seuil1 doit être <= seuil2");
+        }
         int rows = image.length;
         int columns = image[0].length;
         int[][] imageSeuillee = new int[rows][columns];
         
         for(int i = 0; i < rows; i++){
             for(int j = 0; j < columns; j++){
-                if(image[i][j] <= seuil1){
+                if (image[i][j] <= seuil1) {
                     imageSeuillee[i][j] = 0;
-                } else if (seuil1 < image[i][j] && image[i][j] <= seuil2) {
+                } else if (image[i][j] <= seuil2) {
                     imageSeuillee[i][j] = 128;
                 } else {
                     imageSeuillee[i][j] = 255;
@@ -71,7 +70,10 @@ public class Seuillage {
                     }
                 }
             }
-
+            if (count1 == 0 || count2 == 0) {
+                // Cas dégénéré : impossible de séparer en deux classes
+                return seuillageSimple(image, seuil);
+            }
             int newSeuil = (sum1 / count1 + sum2 / count2) / 2;
 
             if(newSeuil == seuil) {
