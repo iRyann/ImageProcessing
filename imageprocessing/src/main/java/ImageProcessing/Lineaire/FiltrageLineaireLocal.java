@@ -49,8 +49,8 @@ public class FiltrageLineaireLocal {
                 
                 for (int ki = 0; ki < kernelSize; ki++) {
                     for (int kj = 0; kj < kernelSize; kj++) {
-                        int imageRow = i + halfKernel + ki;
-                        int imageCol = j + halfKernel + kj;
+                        int imageRow = i + ki;
+                        int imageCol = j + kj;
                         sum += extendedImage[imageRow][imageCol] * masque[ki][kj];
                     }
                 }

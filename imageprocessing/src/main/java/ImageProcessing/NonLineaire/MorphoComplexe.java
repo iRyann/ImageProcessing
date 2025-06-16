@@ -1,4 +1,6 @@
 package ImageProcessing.NonLineaire;
+import java.util.Arrays;
+
 import ImageProcessing.Lineaire.Generic;
 import ImageProcessing.NonLineaire.MorphoElementaire;
 
@@ -84,10 +86,7 @@ public class MorphoComplexe {
         return res;
     }
     
-
     public static int[][] filtreMedian(int[][] image, int tailleMasque) {
-        int half = tailleMasque / 2;
-        int[][] res = Generic.extendImage(image, half, "copy");
         if (tailleMasque % 2 == 0 || tailleMasque < 3) {
             throw new IllegalArgumentException("La taille du masque doit être un entier impair supérieur ou égal à 3.");
         }
@@ -95,24 +94,26 @@ public class MorphoComplexe {
             throw new IllegalArgumentException("Image vide ou nulle");
         }
 
+        int half = tailleMasque / 2;
+
+        int[][] imageEtendue = Generic.extendImage(image, half, "copy");
+        int[][] res = new int[image.length][image[0].length];
+
         for (int i = 0; i < image.length; i++) {
             for (int j = 0; j < image[0].length; j++) {
-                if (i < half || i >= image.length - half || j < half || j >= image[0].length - half) {
-                    continue;
-                }
-
                 int[] window = new int[tailleMasque * tailleMasque];
                 int index = 0;
                 for (int dx = -half; dx <= half; dx++) {
                     for (int dy = -half; dy <= half; dy++) {
-                        window[index++] = image[i + dx][j + dy];
+                        window[index++] = imageEtendue[i + half + dx][j + half + dy];
                     }
                 }
-                java.util.Arrays.sort(window);
+                Arrays.sort(window);
                 res[i][j] = window[window.length / 2];
             }
         }
 
         return res;
     }
+
 }

@@ -1,4 +1,4 @@
-package imageprocessing.histogramme;
+package ImageProcessing.Histogramme;
 
 public class Histogramme 
 {

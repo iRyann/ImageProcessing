@@ -94,6 +94,10 @@ public class Generic {
             throw new IllegalArgumentException("Paramètres invalides");
         }
         
+        if (image.length == 0 || image[0].length == 0) {
+            throw new IllegalArgumentException("Image vide");
+        }
+        
         int rows = image.length;
         int cols = image[0].length;
         int newRows = rows + 2 * borderSize;
@@ -102,33 +106,38 @@ public class Generic {
         
         for (int i = 0; i < newRows; i++) {
             for (int j = 0; j < newCols; j++) {
-                int srcRow;
-                int srcCol;
+                // Calculer les indices dans l'image originale
+                int originalRow = i - borderSize;
+                int originalCol = j - borderSize;
                 
-                if (i < borderSize) {
-                    srcRow = borderSize - 1 - i;
-                } else if (i >= rows + borderSize) {
-                    srcRow = 2 * rows - 1 - (i - borderSize);
-                } else {
-                    srcRow = i - borderSize;
-                }
-                
-                if (j < borderSize) {
-                    srcCol = borderSize - 1 - j;
-                } else if (j >= cols + borderSize) {
-                    srcCol = 2 * cols - 1 - (j - borderSize);
-                } else {
-                    srcCol = j - borderSize;
-                }
-                
-                srcRow = Math.clamp(srcRow, 0, rows - 1);
-                srcCol = Math.clamp(srcCol, 0, cols - 1);
+                // Appliquer l'effet miroir pour les indices qui sortent des bornes
+                int srcRow = mirrorIndex(originalRow, rows);
+                int srcCol = mirrorIndex(originalCol, cols);
                 
                 extendedImage[i][j] = image[srcRow][srcCol];
             }
         }
         
         return extendedImage;
+    }
+
+    /**
+     * Calcule l'indice miroir pour une dimension donnée
+     * @param index L'indice original (peut être négatif ou >= size)
+     * @param size La taille de la dimension
+     * @return L'indice miroir valide
+     */
+    private static int mirrorIndex(int index, int size) {
+        if (index < 0) {
+            // Indices négatifs : miroir vers la droite
+            return -index;
+        } else if (index >= size) {
+            // Indices trop grands : miroir vers la gauche
+            return 2 * size - 2 - index;
+        } else {
+            // Indices valides : pas de changement
+            return index;
+        }
     }
     
 }
