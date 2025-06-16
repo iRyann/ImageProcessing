@@ -64,17 +64,21 @@ public class MorphoComplexe {
     
         boolean changed;
         do {
-            int[][] precedent = res;
+            int[][] precedent = new int[height][width];
+            for (int i = 0; i < height; i++) {
+                System.arraycopy(res[i], 0, precedent[i], 0, width);
+            }
             res = dilatationGeodesique(res, masqueGeodesique, 1);
     
-            changed = false;
-            for (int i = 0; i < height && !changed; i++) {
-                for (int j = 0; j < width && !changed; j++) {
+            int pixelsModifies = 0;
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
                     if (res[i][j] != precedent[i][j]) {
-                        changed = true;
+                        pixelsModifies++;
                     }
                 }
             }
+            changed = (pixelsModifies > 0);
         } while (changed);
     
         return res;
@@ -83,12 +87,17 @@ public class MorphoComplexe {
 
     public static int[][] filtreMedian(int[][] image, int tailleMasque) {
         int half = tailleMasque / 2;
-        int[][] res = new int[image.length][image[0].length];
+        int[][] res = Generic.extendImage(image, half, "copy");
+        if (tailleMasque % 2 == 0 || tailleMasque < 3) {
+            throw new IllegalArgumentException("La taille du masque doit être un entier impair supérieur ou égal à 3.");
+        }
+        if (image == null || image.length == 0 || image[0].length == 0) {
+            throw new IllegalArgumentException("Image vide ou nulle");
+        }
 
         for (int i = 0; i < image.length; i++) {
             for (int j = 0; j < image[0].length; j++) {
                 if (i < half || i >= image.length - half || j < half || j >= image[0].length - half) {
-                    res[i][j] = 0;
                     continue;
                 }
 
