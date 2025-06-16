@@ -13,7 +13,7 @@ public class Seuillage {
         for(int i = 0; i < rows; i++){
             for(int j = 0; j < columns; j++){
                 if(image[i][j] >= seuil){
-                    imageSeuillee[i][j] = 1;
+                    imageSeuillee[i][j] = 255;
                 } else {
                     imageSeuillee[i][j] = 0;
                 }
@@ -33,9 +33,9 @@ public class Seuillage {
                 if(image[i][j] <= seuil1){
                     imageSeuillee[i][j] = 0;
                 } else if (seuil1 < image[i][j] && image[i][j] <= seuil2) {
-                    imageSeuillee[i][j] = 1;
+                    imageSeuillee[i][j] = 128;
                 } else {
-                    imageSeuillee[i][j] = 2;
+                    imageSeuillee[i][j] = 255;
                 }
             }
         }
@@ -87,7 +87,7 @@ public class Seuillage {
                 if(image[i][j] <= seuil) {
                     imageSeuillee[i][j] = 0;
                 } else {
-                    imageSeuillee[i][j] = 1;
+                    imageSeuillee[i][j] = 255;
                 }
             }
         }
