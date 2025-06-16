@@ -112,7 +112,7 @@ public class FiltrageLineaireGlobal {
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < column; j++) {
                 double d = Math.sqrt(Math.pow(i - row / 2.0, 2) + Math.pow(j - column / 2.0, 2));
-                double h = 1.0 / (1.0 + Math.pow(d / frequenceCoupure, -2.d * ordre));
+                double h = 1.0 / (1.0 + Math.pow(d / frequenceCoupure, 2.d * ordre));
                 fourierImage.get(i, j).multiplie(new Complexe(h, 0));
             }
         }
