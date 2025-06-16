@@ -18,6 +18,13 @@ public class FiltrageLineaireGlobal {
      */
     public static int[][] filtrePasseBasIdeal(int[][] image, int frequenceCoupure){
 
+        if (frequenceCoupure <= 0) {
+            throw new IllegalArgumentException("La fréquence de coupure doit être supérieure à 0.");
+        }
+        if (image == null || image.length == 0 || image[0].length == 0) {
+            throw new IllegalArgumentException("L'image ne doit pas être vide.");
+        }
+
         int row = image.length;
         int column = image[0].length;
 
@@ -46,6 +53,14 @@ public class FiltrageLineaireGlobal {
      * @description Filtre passe haut idéal
      */
     public static int[][] filtrePasseHautIdeal(int[][] image, int frequenceCoupure) {
+
+        if (frequenceCoupure <= 0) {
+            throw new IllegalArgumentException("La fréquence de coupure doit être supérieure à 0.");
+        }
+        if (image == null || image.length == 0 || image[0].length == 0) {
+            throw new IllegalArgumentException("L'image ne doit pas être vide.");
+        }
+
         int row = image.length;
         int column = image[0].length;
 
@@ -75,6 +90,17 @@ public class FiltrageLineaireGlobal {
      * @description Filtre passe bas Butterworth
      */
     public static int[][] filtrePasseBasButterworth(int[][] image, int frequenceCoupure, int ordre) {
+
+        if (frequenceCoupure <= 0) {
+            throw new IllegalArgumentException("La fréquence de coupure doit être supérieure à 0.");
+        }
+        if (ordre <= 0) {
+            throw new IllegalArgumentException("L'ordre doit être supérieur à 0.");
+        }
+        if (image == null || image.length == 0 || image[0].length == 0) {
+            throw new IllegalArgumentException("L'image ne doit pas être vide.");
+        }
+
         int row = image.length;
         int column = image[0].length;
     
@@ -104,16 +130,16 @@ public class FiltrageLineaireGlobal {
      */
     public static int[][] filtrePasseHautButterworth(int[][] image, int frequenceCoupure, int ordre){
 
-        int row = image.length;
-        int column = image[0].length;
-
+        
         if (frequenceCoupure <= 0) {
             throw new IllegalArgumentException("La fréquence de coupure doit être supérieure à 0.");
         }
         if (ordre <= 0) {
             throw new IllegalArgumentException("L'ordre doit être supérieur à 0.");
         }
-
+        
+        int row = image.length;
+        int column = image[0].length;
         MatriceComplexe fourierImage = Fourier.Fourier2D(MyCast.toDoubleArray(image));
 
         for (int i = 0; i < row; i++) {
