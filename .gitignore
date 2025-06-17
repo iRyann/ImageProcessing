@@ -2,6 +2,7 @@
 .idea
 imageprocessing/.idea
 imageprocessing/ImagesFournies
+imageprocessing/ImagesEtape5
 imageprocessing/sorties
 # Compiled class file
 *.class

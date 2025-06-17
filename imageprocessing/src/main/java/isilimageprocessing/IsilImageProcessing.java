@@ -43,7 +43,10 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
     private int   couleurPinceauNG;
 
     private int[] courbeTonale;
-    
+    private int[] courbeTonaleR;
+    private int[] courbeTonaleG;
+    private int[] courbeTonaleB;
+
     /** Creates new form TestCImage2 */
     public IsilImageProcessing() 
     {
@@ -646,21 +649,51 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
         jMenuApplications.add(jMenuItemApp1);
 
         jMenuItemApp2.setText("Réhaussement");
+        jMenuItemApp2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemApp2ActionPerformed(evt);
+            }
+        });
         jMenuApplications.add(jMenuItemApp2);
 
         jMenuItemApp3.setText("Images binaires");
+        jMenuItemApp3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemApp3ActionPerformed(evt);
+            }
+        });
         jMenuApplications.add(jMenuItemApp3);
 
         jMenuItemApp4.setText("Images niveau de gris");
+        jMenuItemApp4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemApp4ActionPerformed(evt);
+            }
+        });
         jMenuApplications.add(jMenuItemApp4);
 
         jMenuItemApp5.setText("Segmentation binaire");
+        jMenuItemApp5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemApp5ActionPerformed(evt);
+            }
+        });
         jMenuApplications.add(jMenuItemApp5);
 
         jMenuItemApp6.setText("Extraction");
+        jMenuItemApp6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemApp6ActionPerformed(evt);
+            }
+        });
         jMenuApplications.add(jMenuItemApp6);
 
         jMenuItemApp7.setText("Contours");
+        jMenuItemApp7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemApp7ActionPerformed(evt);
+            }
+        });
         jMenuApplications.add(jMenuItemApp7);
 
         jMenuBar1.add(jMenuApplications);
@@ -1081,6 +1114,7 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
 
             if (imageNG != null) {
                 int[][] imageFiltree = FiltrageLineaireGlobal.filtrePasseHautIdeal(imageNG.getMatrice(), frequenceCoupure);
+                System.out.println(Arrays.deepToString(imageFiltree));
                 imageNG.setMatrice(imageFiltree);
             }
             else if (imageRGB != null) {
@@ -1121,6 +1155,7 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
 
             if (imageNG != null) {
                 int[][] imageFiltree = FiltrageLineaireGlobal.filtrePasseBasButterworth(imageNG.getMatrice(), frequenceCoupure, ordre);
+                System.out.println(Arrays.deepToString(imageFiltree));
                 imageNG.setMatrice(imageFiltree);
             }
             else if (imageRGB != null) {
@@ -1162,6 +1197,7 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
             if (imageNG != null) {
                 int[][] imageFiltree = FiltrageLineaireGlobal.filtrePasseHautButterworth(imageNG.getMatrice(), frequenceCoupure, ordre);
                 System.out.println("Filtrage lineaire passe haut Butterworth effectue");
+                System.out.println(Arrays.deepToString(imageFiltree));
                 imageNG.setMatrice(imageFiltree);
             }
             else if (imageRGB != null) {
@@ -1831,6 +1867,7 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
 
 
             courbeTonale = Histogramme.creeCourbeTonaleLineaireSaturation(satmin, satmax);
+            courbeTonaleR = courbeTonaleG = courbeTonaleB = courbeTonale;
             System.out.println("Courbe tonale creee");
         } catch (Exception e) {
             System.out.println("CImageNGException : " + e.getMessage());
@@ -1841,7 +1878,7 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
     private void jMenuItemRehaussementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemRehaussementActionPerformed
         // TODO add your handling code here:
         try {
-            if (courbeTonale == null) {
+            if ((courbeTonaleR == null && courbeTonaleB == null && courbeTonaleG == null && imageRGB != null) || (courbeTonale == null && imageNG != null)) {
                 throw new RuntimeException("Pas de courbe tonale créée");
             }
             if (imageNG != null ) {
@@ -1855,9 +1892,9 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
                 int[][] vert = new int[largeur][hauteur];
                 int[][] bleu = new int[largeur][hauteur];
                 imageRGB.getMatricesRGB(rouge, vert, bleu);
-                int[][] rougeFiltre = Histogramme.rehaussement(rouge, courbeTonale);
-                int[][] vertFiltre = Histogramme.rehaussement(vert, courbeTonale);
-                int[][] bleuFiltre = Histogramme.rehaussement(bleu, courbeTonale);
+                int[][] rougeFiltre = Histogramme.rehaussement(rouge, courbeTonaleR);
+                int[][] vertFiltre = Histogramme.rehaussement(vert, courbeTonaleG);
+                int[][] bleuFiltre = Histogramme.rehaussement(bleu, courbeTonaleB);
                 imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
             }
         } catch (CImageNGException e) {
@@ -1876,6 +1913,7 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
             double gamma = dialog.getValue();
 
             courbeTonale = Histogramme.creeCourbeTonaleGamma(gamma);
+            courbeTonaleR = courbeTonaleG = courbeTonaleB = courbeTonale;
             System.out.println("Courbe tonale creee");
 
         } catch (RuntimeException e) {
@@ -1886,6 +1924,7 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
     private void jMenuItemCourbeTonaleNegatifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCourbeTonaleNegatifActionPerformed
         // TODO add your handling code here:
         courbeTonale = Histogramme.creeCourbeTonaleNegatif();
+        courbeTonaleR = courbeTonaleG = courbeTonaleB = courbeTonale;
         System.out.println("Courbe tonale creee");
     }//GEN-LAST:event_jMenuItemCourbeTonaleNegatifActionPerformed
 
@@ -1896,10 +1935,21 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
                 courbeTonale = Histogramme.creeCourbeTonaleEgalisation(imageNG.getMatrice());
             }
             else if (imageRGB != null) {
-                courbeTonale = Histogramme.creeCourbeTonaleEgalisation(imageRGB.getCImageNG().getMatrice());
+
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                courbeTonaleR = Histogramme.creeCourbeTonaleEgalisation(rouge);
+                courbeTonaleG = Histogramme.creeCourbeTonaleEgalisation(vert);
+                courbeTonaleB = Histogramme.creeCourbeTonaleEgalisation(bleu);
             }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
         System.out.println("Courbe tonale creee");
     }//GEN-LAST:event_jMenuItemCourbeTonaleEgalisationActionPerformed
@@ -1907,6 +1957,32 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
     private void jMenuItemApp1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemApp1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItemApp1ActionPerformed
+
+    private void jMenuItemApp2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemApp2ActionPerformed
+        // TODO add your handling code here:
+        jMenuItemCourbeTonaleEgalisationActionPerformed(null);
+        jMenuItemRehaussementActionPerformed(null);
+    }//GEN-LAST:event_jMenuItemApp2ActionPerformed
+
+    private void jMenuItemApp3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemApp3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItemApp3ActionPerformed
+
+    private void jMenuItemApp4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemApp4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItemApp4ActionPerformed
+
+    private void jMenuItemApp5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemApp5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItemApp5ActionPerformed
+
+    private void jMenuItemApp6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemApp6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItemApp6ActionPerformed
+
+    private void jMenuItemApp7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemApp7ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItemApp7ActionPerformed
     
     /**
      * @param args the command line arguments
