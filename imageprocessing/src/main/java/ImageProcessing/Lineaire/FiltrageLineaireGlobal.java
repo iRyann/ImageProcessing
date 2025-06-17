@@ -16,30 +16,40 @@ public class FiltrageLineaireGlobal {
      * @version 1.0
      * @description Filtre passe bas idéal
      */
-    public static int[][] filtrePasseBasIdeal(int[][] image, int frequenceCoupure){
-
+    public static int[][] filtrePasseBasIdeal(int[][] image, int frequenceCoupure) {
         if (frequenceCoupure <= 0) {
             throw new IllegalArgumentException("La fréquence de coupure doit être supérieure à 0.");
         }
         if (image == null || image.length == 0 || image[0].length == 0) {
             throw new IllegalArgumentException("L'image ne doit pas être vide.");
         }
-
+        
         int row = image.length;
         int column = image[0].length;
-
         MatriceComplexe fourierImage = Fourier.Fourier2D(MyCast.toDoubleArray(image));
-
-        for(int i = 0; i < row; i++){
-            for(int j = 0; j < column; j++){
+        
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
                 double d = Math.sqrt(Math.pow(i, 2) + Math.pow(j, 2));
-                if(d > frequenceCoupure){
+                if (d > frequenceCoupure) {
                     fourierImage.set(i, j, new Complexe(0, 0));
                 }
             }
         }
-
-        return MyCast.toIntArray(Fourier.InverseFourier2D(fourierImage).getPartieReelle());
+        
+        int[][] resultat = MyCast.toIntArray(Fourier.InverseFourier2D(fourierImage).getPartieReelle());
+        
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
+                if (resultat[i][j] < 0) {
+                    resultat[i][j] = 0;
+                } else if (resultat[i][j] > 255) {
+                    resultat[i][j] = 255;
+                }
+            }
+        }
+        
+        return resultat;
     }
 
     /**
@@ -53,31 +63,40 @@ public class FiltrageLineaireGlobal {
      * @description Filtre passe haut idéal
      */
     public static int[][] filtrePasseHautIdeal(int[][] image, int frequenceCoupure) {
-
         if (frequenceCoupure <= 0) {
             throw new IllegalArgumentException("La fréquence de coupure doit être supérieure à 0.");
         }
         if (image == null || image.length == 0 || image[0].length == 0) {
             throw new IllegalArgumentException("L'image ne doit pas être vide.");
         }
-
+        
         int row = image.length;
         int column = image[0].length;
-
         MatriceComplexe fourierImage = Fourier.Fourier2D(MyCast.toDoubleArray(image));
-
-        for(int i = 0; i < row; i++){
-            for(int j = 0; j < column; j++){
+        
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
                 double d = Math.sqrt(Math.pow(i, 2) + Math.pow(j, 2));
-                if(d < frequenceCoupure){
+                if (d <= frequenceCoupure) {
                     fourierImage.set(i, j, new Complexe(0, 0));
                 }
             }
         }
-
-        return MyCast.toIntArray(Fourier.InverseFourier2D(fourierImage).getPartieReelle());
+        
+        int[][] resultat = MyCast.toIntArray(Fourier.InverseFourier2D(fourierImage).getPartieReelle());
+        
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
+                if (resultat[i][j] < 0) {
+                    resultat[i][j] = 0;
+                } else if (resultat[i][j] > 255) {
+                    resultat[i][j] = 255;
+                }
+            }
+        }
+        
+        return resultat;
     }
-
     /**
      * Filtre passe bas Butterworth
      * @param image
