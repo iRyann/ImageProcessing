@@ -32,7 +32,7 @@ public class FiltrageLineaireGlobal {
 
         for(int i = 0; i < row; i++){
             for(int j = 0; j < column; j++){
-                double d = Math.sqrt(Math.pow(i - row / 2.d, 2) + Math.pow(j - column / 2.d, 2));
+                double d = Math.sqrt(Math.pow(i, 2) + Math.pow(j, 2));
                 if(d > frequenceCoupure){
                     fourierImage.set(i, j, new Complexe(0, 0));
                 }
@@ -68,7 +68,7 @@ public class FiltrageLineaireGlobal {
 
         for(int i = 0; i < row; i++){
             for(int j = 0; j < column; j++){
-                double d = Math.sqrt(Math.pow(i - row / 2.d, 2) + Math.pow(j - column / 2.d, 2));
+                double d = Math.sqrt(Math.pow(i, 2) + Math.pow(j, 2));
                 if(d < frequenceCoupure){
                     fourierImage.set(i, j, new Complexe(0, 0));
                 }
@@ -108,8 +108,13 @@ public class FiltrageLineaireGlobal {
     
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < column; j++) {
-                double d = Math.sqrt(Math.pow(i - row / 2.0, 2) + Math.pow(j - column / 2.0, 2));
-                double h = 1.0 / (1.0 + Math.pow(d / frequenceCoupure, 2.d * ordre));
+                double d = Math.sqrt(Math.pow(i, 2) + Math.pow(j, 2));
+                double h;
+                if (d == 0) {
+                    h = 1;
+                } else {
+                    h = 1.0 / (1.0 + Math.pow(d / frequenceCoupure, 2.0 * ordre));
+                }
                 fourierImage.get(i, j).multiplie(new Complexe(h, 0));
             }
         }
@@ -129,13 +134,15 @@ public class FiltrageLineaireGlobal {
      * @description Filtre passe haut Butterworth
      */
     public static int[][] filtrePasseHautButterworth(int[][] image, int frequenceCoupure, int ordre){
-
         
         if (frequenceCoupure <= 0) {
             throw new IllegalArgumentException("La fréquence de coupure doit être supérieure à 0.");
         }
         if (ordre <= 0) {
             throw new IllegalArgumentException("L'ordre doit être supérieur à 0.");
+        }
+        if (image == null || image.length == 0 || image[0].length == 0) {
+            throw new IllegalArgumentException("L'image ne doit pas être vide.");
         }
         
         int row = image.length;
@@ -144,8 +151,14 @@ public class FiltrageLineaireGlobal {
 
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < column; j++) {
-                double d = Math.sqrt(Math.pow(i - row / 2.0, 2) + Math.pow(j - column / 2.0, 2));
-                double h = 1.0 / (1.0 + Math.pow(d / frequenceCoupure, 2.d * ordre));
+                double d = Math.sqrt(Math.pow(i, 2) + Math.pow(j, 2));
+                double h;
+                if (d == 0) {
+                    h = 0; // Block DC component
+                } else {
+                    h = 1.0 / (1.0 + Math.pow(frequenceCoupure / d, 2.0 * ordre));
+                }
+                
                 fourierImage.get(i, j).multiplie(new Complexe(h, 0));
             }
         }
