@@ -64,7 +64,8 @@ public class ContoursNonLineaire {
         int[][] res = new int[image.length][image[0].length];
         for (int i = 0; i < image.length; i++) {
             for (int j = 0; j < image[0].length; j++) {
-                res[i][j] = dilatationGradient[i][j] - erosionGradient[i][j];
+                int value = dilatationGradient[i][j] - erosionGradient[i][j];
+                res[i][j] = Math.max(0, Math.min(255, value));
             }
         }
         return res;
