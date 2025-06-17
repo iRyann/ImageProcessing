@@ -154,6 +154,14 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
         jMenuItemSeuillageSimple = new javax.swing.JMenuItem();
         jMenuItemSeuillageDouble = new javax.swing.JMenuItem();
         jMenuItemSeuillageAutomatique = new javax.swing.JMenuItem();
+        jMenuApplications = new javax.swing.JMenu();
+        jMenuItemApp1 = new javax.swing.JMenuItem();
+        jMenuItemApp2 = new javax.swing.JMenuItem();
+        jMenuItemApp3 = new javax.swing.JMenuItem();
+        jMenuItemApp4 = new javax.swing.JMenuItem();
+        jMenuItemApp5 = new javax.swing.JMenuItem();
+        jMenuItemApp6 = new javax.swing.JMenuItem();
+        jMenuItemApp7 = new javax.swing.JMenuItem();
 
         jMenuItem6.setText("jMenuItem6");
 
@@ -627,6 +635,36 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
 
         jMenuBar1.add(jMenuSeuillage);
 
+        jMenuApplications.setText("Applications");
+
+        jMenuItemApp1.setText("Image bruitée");
+        jMenuItemApp1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemApp1ActionPerformed(evt);
+            }
+        });
+        jMenuApplications.add(jMenuItemApp1);
+
+        jMenuItemApp2.setText("Réhaussement");
+        jMenuApplications.add(jMenuItemApp2);
+
+        jMenuItemApp3.setText("Images binaires");
+        jMenuApplications.add(jMenuItemApp3);
+
+        jMenuItemApp4.setText("Images niveau de gris");
+        jMenuApplications.add(jMenuItemApp4);
+
+        jMenuItemApp5.setText("Segmentation binaire");
+        jMenuApplications.add(jMenuItemApp5);
+
+        jMenuItemApp6.setText("Extraction");
+        jMenuApplications.add(jMenuItemApp6);
+
+        jMenuItemApp7.setText("Contours");
+        jMenuApplications.add(jMenuItemApp7);
+
+        jMenuBar1.add(jMenuApplications);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -635,7 +673,7 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 875, Short.MAX_VALUE)
+                .addComponent(jScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 976, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -646,7 +684,7 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
                 .addContainerGap())
         );
 
-        setSize(new java.awt.Dimension(901, 483));
+        setSize(new java.awt.Dimension(1002, 483));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -1005,6 +1043,7 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
 
             if (imageNG != null) {
                 int[][] imageFiltree = FiltrageLineaireGlobal.filtrePasseBasIdeal(imageNG.getMatrice(), frequenceCoupure);
+                System.out.println(Arrays.deepToString(imageFiltree));
                 imageNG.setMatrice(imageFiltree);
             }
             else if (imageRGB != null) {
@@ -1017,6 +1056,9 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
                 int[][] rougeFiltre = FiltrageLineaireGlobal.filtrePasseBasIdeal(rouge, frequenceCoupure);
                 int[][] vertFiltre = FiltrageLineaireGlobal.filtrePasseBasIdeal(rouge, frequenceCoupure);
                 int[][] bleuFiltre = FiltrageLineaireGlobal.filtrePasseBasIdeal(rouge, frequenceCoupure);
+                System.out.println(Arrays.deepToString(rougeFiltre));
+                System.out.println(Arrays.deepToString(vertFiltre));
+                System.out.println(Arrays.deepToString(bleuFiltre));
                 imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
             }
 
@@ -1144,7 +1186,7 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
     private void jMenuItemMasqueConvolutionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemMasqueConvolutionActionPerformed
         // TODO add your handling code here:
         try {
-            JDialogFiltrageLineaire dialog = new JDialogFiltrageLineaire(this,true, "Entrer la matrice de convolution : ',' pour séparer les colonnes, ';' pour séparer les lignes");
+            JDialogFiltrageLineaire dialog = new JDialogFiltrageLineaire(this,true, "Entrer la matrice de convolution : \n',' pour séparer les colonnes, ';' pour séparer les lignes");
             dialog.setVisible(true);
 
             String text = dialog.getText();
@@ -1351,7 +1393,7 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
     private void jMenuItemReconstructionGeodesiqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemReconstructionGeodesiqueActionPerformed
         // TODO add your handling code here:
         try {
-            JDialogFiltrageLineaire dialog = new JDialogFiltrageLineaire(this,true, "Entrer la matrice du masque");
+            JDialogFiltrageLineaire dialog = new JDialogFiltrageLineaire(this,true, "Entrer la matrice du masque\n',' pour séparer les colonnes, ';' pour séparer les lignes");
             dialog.setVisible(true);
 
             String text = dialog.getText();
@@ -1402,7 +1444,7 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
     private void jMenuItemDilatationGeodesiqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemDilatationGeodesiqueActionPerformed
         // TODO add your handling code here:
         try {
-            JDialogFiltrageLineaire dialog = new JDialogFiltrageLineaire(this,true, "Entrer la matrice du masque");
+            JDialogFiltrageLineaire dialog = new JDialogFiltrageLineaire(this,true, "Entrer la matrice du masque\n',' pour séparer les colonnes, ';' pour séparer les lignes");
             dialog.setVisible(true);
 
             String text = dialog.getText();
@@ -1626,6 +1668,7 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
         try {
             if (imageNG != null) {
                 int[][] imageFiltree = ContoursNonLineaire.gradientBeucher(imageNG.getMatrice());
+                System.out.println(Arrays.deepToString(imageFiltree));
                 imageNG.setMatrice(imageFiltree);
             }
             else if (imageRGB != null) {
@@ -1638,6 +1681,10 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
                 int[][] rougeFiltre = ContoursNonLineaire.gradientBeucher(rouge);
                 int[][] vertFiltre = ContoursNonLineaire.gradientBeucher(vert);
                 int[][] bleuFiltre = ContoursNonLineaire.gradientBeucher(bleu);
+                System.out.println(Arrays.deepToString(rougeFiltre));
+                System.out.println(Arrays.deepToString(vertFiltre));
+                System.out.println(Arrays.deepToString(bleuFiltre));
+
                 imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
             }
         } catch (CImageNGException e) {
@@ -1734,13 +1781,15 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
         // TODO add your handling code here:
 
         try {
-            int hauteur = imageNG.getMatrice().length;
-            int largeur = imageNG.getMatrice()[0].length;
-            int minimum = Histogramme.minimum(imageNG.getMatrice());
-            int maximum = Histogramme.maximum(imageNG.getMatrice());
-            int luminance = Histogramme.luminance(imageNG.getMatrice());
-            double contraste1 = Histogramme.contraste1(imageNG.getMatrice());
-            double contraste2 = Histogramme.contraste2(imageNG.getMatrice());
+            CImageNG img;
+            img = imageNG != null ? imageNG : imageRGB.getCImageNG();
+            int hauteur = img.getMatrice().length;
+            int largeur = img.getMatrice()[0].length;
+            int minimum = Histogramme.minimum(img.getMatrice());
+            int maximum = Histogramme.maximum(img.getMatrice());
+            int luminance = Histogramme.luminance(img.getMatrice());
+            double contraste1 = Histogramme.contraste1(img.getMatrice());
+            double contraste2 = Histogramme.contraste2(img.getMatrice());
 
             System.out.println("hauteur : " + hauteur);
             System.out.println("largeur : " + largeur);
@@ -1854,6 +1903,10 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
         }
         System.out.println("Courbe tonale creee");
     }//GEN-LAST:event_jMenuItemCourbeTonaleEgalisationActionPerformed
+
+    private void jMenuItemApp1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemApp1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItemApp1ActionPerformed
     
     /**
      * @param args the command line arguments
@@ -1982,6 +2035,7 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItemDessinerPixel;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItemDessinerRectangle;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItemDessinerRectanglePlein;
+    private javax.swing.JMenu jMenuApplications;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu jMenuContour;
     private javax.swing.JMenu jMenuContourLineaire;
@@ -1998,6 +2052,13 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
     private javax.swing.JMenu jMenuImage;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItemApp1;
+    private javax.swing.JMenuItem jMenuItemApp2;
+    private javax.swing.JMenuItem jMenuItemApp3;
+    private javax.swing.JMenuItem jMenuItemApp4;
+    private javax.swing.JMenuItem jMenuItemApp5;
+    private javax.swing.JMenuItem jMenuItemApp6;
+    private javax.swing.JMenuItem jMenuItemApp7;
     private javax.swing.JMenuItem jMenuItemCouleurPinceau;
     private javax.swing.JMenuItem jMenuItemCourbeTonaleEgalisation;
     private javax.swing.JMenuItem jMenuItemCourbeTonaleGamma;
