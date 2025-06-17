@@ -65,6 +65,10 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
         jMenuDessiner.setEnabled(false);
         jMenuFourier.setEnabled(false);
         jMenuHistogramme.setEnabled(false);
+        jMenuFiltrageLineaire.setEnabled(false);
+        jMenuTraitementNonLineaire.setEnabled(false);
+        jMenuContour.setEnabled(false);
+        jMenuSeuillage.setEnabled(false);
         
         couleurPinceauRGB = Color.BLACK;
         couleurPinceauNG = 0;
@@ -684,13 +688,21 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
         jMenuDessiner.setEnabled(true);
         jMenuFourier.setEnabled(true);
         jMenuHistogramme.setEnabled(true);
+        jMenuContour.setEnabled(true);
+        jMenuSeuillage.setEnabled(true);
+        jMenuFiltrageLineaire.setEnabled(true);
+        jMenuTraitementNonLineaire.setEnabled(true);
     }
     
     private void activeMenusRGB()
     {
         jMenuDessiner.setEnabled(true);
         jMenuFourier.setEnabled(false);
-        jMenuHistogramme.setEnabled(false);
+        jMenuHistogramme.setEnabled(true);
+        jMenuContour.setEnabled(true);
+        jMenuSeuillage.setEnabled(false);
+        jMenuFiltrageLineaire.setEnabled(true);
+        jMenuTraitementNonLineaire.setEnabled(true);
     }
     
     private void jCheckBoxMenuItemDessinerCerclePleinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItemDessinerCerclePleinActionPerformed
@@ -991,12 +1003,29 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
             double freq = dialog.getValue();
             int frequenceCoupure = (int) freq;
 
-            int[][] imageFiltree = FiltrageLineaireGlobal.filtrePasseBasIdeal(imageNG.getMatrice(), frequenceCoupure);
-            System.out.println("Filtrage lineaire passe bas effectue");
-            imageNG.setMatrice(imageFiltree);
+            if (imageNG != null) {
+                int[][] imageFiltree = FiltrageLineaireGlobal.filtrePasseBasIdeal(imageNG.getMatrice(), frequenceCoupure);
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                int[][] rougeFiltre = FiltrageLineaireGlobal.filtrePasseBasIdeal(rouge, frequenceCoupure);
+                int[][] vertFiltre = FiltrageLineaireGlobal.filtrePasseBasIdeal(rouge, frequenceCoupure);
+                int[][] bleuFiltre = FiltrageLineaireGlobal.filtrePasseBasIdeal(rouge, frequenceCoupure);
+                imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
+            }
+
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
+        System.out.println("Filtrage lineaire passe bas effectue");
     }//GEN-LAST:event_jMenuItemFiltrePasseBasIdealActionPerformed
 
     private void jMenuItemFiltrePasseHautIdealActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFiltrePasseHautIdealActionPerformed
@@ -1008,12 +1037,28 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
             double freq = dialog.getValue();
             int frequenceCoupure = (int) freq;
 
-            int[][] imageFiltree = FiltrageLineaireGlobal.filtrePasseHautIdeal(imageNG.getMatrice(), frequenceCoupure);
-            System.out.println("Filtrage lineaire passe haut effectue");
-            imageNG.setMatrice(imageFiltree);
+            if (imageNG != null) {
+                int[][] imageFiltree = FiltrageLineaireGlobal.filtrePasseHautIdeal(imageNG.getMatrice(), frequenceCoupure);
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                int[][] rougeFiltre = FiltrageLineaireGlobal.filtrePasseHautIdeal(rouge, frequenceCoupure);
+                int[][] vertFiltre = FiltrageLineaireGlobal.filtrePasseHautIdeal(rouge, frequenceCoupure);
+                int[][] bleuFiltre = FiltrageLineaireGlobal.filtrePasseHautIdeal(rouge, frequenceCoupure);
+                imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
+        System.out.println("Filtrage lineaire passe haut effectue");
     }//GEN-LAST:event_jMenuItemFiltrePasseHautIdealActionPerformed
 
     private void jMenuItemFiltrePasseBasButterworthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFiltrePasseBasButterworthActionPerformed
@@ -1032,12 +1077,28 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
             double o = dialog2.getValue();
             int ordre = (int) o;
 
-            int[][] imageFiltree = FiltrageLineaireGlobal.filtrePasseBasButterworth(imageNG.getMatrice(), frequenceCoupure, ordre);
-            System.out.println("Filtrage lineaire passe bas Butterworth effectue");
-            imageNG.setMatrice(imageFiltree);
+            if (imageNG != null) {
+                int[][] imageFiltree = FiltrageLineaireGlobal.filtrePasseBasButterworth(imageNG.getMatrice(), frequenceCoupure, ordre);
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                int[][] rougeFiltre = FiltrageLineaireGlobal.filtrePasseBasButterworth(rouge, frequenceCoupure, ordre);
+                int[][] vertFiltre = FiltrageLineaireGlobal.filtrePasseBasButterworth(vert, frequenceCoupure, ordre);
+                int[][] bleuFiltre = FiltrageLineaireGlobal.filtrePasseBasButterworth(bleu, frequenceCoupure, ordre);
+                imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
+        System.out.println("Filtrage lineaire passe bas Butterworth effectue");
     }//GEN-LAST:event_jMenuItemFiltrePasseBasButterworthActionPerformed
 
     private void jMenuItemFiltrePasseHautButterworthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFiltrePasseHautButterworthActionPerformed
@@ -1056,11 +1117,27 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
             double o = filtrageLineaire2.getValue();
             int ordre = (int) o;
 
-            int[][] imageFiltree = FiltrageLineaireGlobal.filtrePasseHautButterworth(imageNG.getMatrice(), frequenceCoupure, ordre);
-            System.out.println("Filtrage lineaire passe haut Butterworth effectue");
-            imageNG.setMatrice(imageFiltree);
+            if (imageNG != null) {
+                int[][] imageFiltree = FiltrageLineaireGlobal.filtrePasseHautButterworth(imageNG.getMatrice(), frequenceCoupure, ordre);
+                System.out.println("Filtrage lineaire passe haut Butterworth effectue");
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                int[][] rougeFiltre = FiltrageLineaireGlobal.filtrePasseHautButterworth(rouge, frequenceCoupure, ordre);
+                int[][] vertFiltre = FiltrageLineaireGlobal.filtrePasseHautButterworth(vert, frequenceCoupure, ordre);
+                int[][] bleuFiltre = FiltrageLineaireGlobal.filtrePasseHautButterworth(bleu, frequenceCoupure, ordre);
+                imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
     }//GEN-LAST:event_jMenuItemFiltrePasseHautButterworthActionPerformed
 
@@ -1079,12 +1156,28 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
             System.out.println("Matrice de convolution : " + Arrays.deepToString(matConvolution));
 
 
-            int[][] imageFiltree = FiltrageLineaireLocal.filtreMasqueConvolution(imageNG.getMatrice(), matConvolution);
-            System.out.println("Filtrage lineaire masque convolution effectue");
-            imageNG.setMatrice(imageFiltree);
+            if (imageNG != null) {
+                int[][] imageFiltree = FiltrageLineaireLocal.filtreMasqueConvolution(imageNG.getMatrice(), matConvolution);
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                int[][] rougeFiltre = FiltrageLineaireLocal.filtreMasqueConvolution(rouge, matConvolution);
+                int[][] vertFiltre = FiltrageLineaireLocal.filtreMasqueConvolution(vert, matConvolution);
+                int[][] bleuFiltre = FiltrageLineaireLocal.filtreMasqueConvolution(bleu, matConvolution);
+                imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
+        System.out.println("Filtrage lineaire masque convolution effectue");
     }//GEN-LAST:event_jMenuItemMasqueConvolutionActionPerformed
 
     private void jMenuItemFiltreMoyenneurActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFiltreMoyenneurActionPerformed
@@ -1096,13 +1189,28 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
             double t = dialog.getValue();
             int tailleMasque = (int) t;
 
-
-            int[][] imageFiltree = FiltrageLineaireLocal.filtreMoyenneur(imageNG.getMatrice(), tailleMasque);
-            System.out.println("Filtrage lineaire moyenneur effectue");
-            imageNG.setMatrice(imageFiltree);
+            if (imageNG != null) {
+                int[][] imageFiltree = FiltrageLineaireLocal.filtreMoyenneur(imageNG.getMatrice(), tailleMasque);
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                int[][] rougeFiltre = FiltrageLineaireLocal.filtreMoyenneur(rouge, tailleMasque);
+                int[][] vertFiltre = FiltrageLineaireLocal.filtreMoyenneur(vert, tailleMasque);
+                int[][] bleuFiltre = FiltrageLineaireLocal.filtreMoyenneur(bleu, tailleMasque);
+                imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
+        System.out.println("Filtrage lineaire moyenneur effectue");
     }//GEN-LAST:event_jMenuItemFiltreMoyenneurActionPerformed
 
     private void jMenuItemErosionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemErosionActionPerformed
@@ -1114,12 +1222,28 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
             double v = dialog.getValue();
             int tailleMasque = (int) v;
 
-            int[][] imageFiltree = MorphoElementaire.erosion(imageNG.getMatrice(), tailleMasque);
-            System.out.println("Morpho elementaire erosion effectuee");
-            imageNG.setMatrice(imageFiltree);
+            if (imageNG != null) {
+                int[][] imageFiltree = MorphoElementaire.erosion(imageNG.getMatrice(), tailleMasque);
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                int[][] rougeFiltre = MorphoElementaire.erosion(rouge, tailleMasque);
+                int[][] vertFiltre = MorphoElementaire.erosion(vert, tailleMasque);
+                int[][] bleuFiltre = MorphoElementaire.erosion(bleu, tailleMasque);
+                imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
+        System.out.println("Morpho elementaire erosion effectuee");
     }//GEN-LAST:event_jMenuItemErosionActionPerformed
 
     private void jMenuItemDilatationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemDilatationActionPerformed
@@ -1132,12 +1256,28 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
             int tailleMasque = (int) v;
 
 
-            int[][] imageFiltree = MorphoElementaire.dilatation(imageNG.getMatrice(), tailleMasque);
-            System.out.println("Morpho elementaire dilatation effectuee");
-            imageNG.setMatrice(imageFiltree);
+            if (imageNG != null) {
+                int[][] imageFiltree = MorphoElementaire.dilatation(imageNG.getMatrice(), tailleMasque);
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                int[][] rougeFiltre = MorphoElementaire.dilatation(rouge, tailleMasque);
+                int[][] vertFiltre = MorphoElementaire.dilatation(vert, tailleMasque);
+                int[][] bleuFiltre = MorphoElementaire.dilatation(bleu, tailleMasque);
+                imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
+        System.out.println("Morpho elementaire dilatation effectuee");
     }//GEN-LAST:event_jMenuItemDilatationActionPerformed
 
     private void jMenuItemOuvertureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOuvertureActionPerformed
@@ -1150,12 +1290,28 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
             int tailleMasque = (int) v;
 
 
-            int[][] imageFiltree = MorphoElementaire.ouverture(imageNG.getMatrice(), tailleMasque);
-            System.out.println("Morpho elementaire ouverture effectuee");
-            imageNG.setMatrice(imageFiltree);
+            if (imageNG != null) {
+                int[][] imageFiltree = MorphoElementaire.ouverture(imageNG.getMatrice(), tailleMasque);
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                int[][] rougeFiltre = MorphoElementaire.ouverture(rouge, tailleMasque);
+                int[][] vertFiltre = MorphoElementaire.ouverture(vert, tailleMasque);
+                int[][] bleuFiltre = MorphoElementaire.ouverture(bleu, tailleMasque);
+                imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
+        System.out.println("Morpho elementaire ouverture effectuee");
     }//GEN-LAST:event_jMenuItemOuvertureActionPerformed
 
     private void jMenuItemFermetureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFermetureActionPerformed
@@ -1168,12 +1324,28 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
             int tailleMasque = (int) v;
 
 
-            int[][] imageFiltree = MorphoElementaire.fermeture(imageNG.getMatrice(), tailleMasque);
-            System.out.println("Morpho elementaire fermeture effectuee");
-            imageNG.setMatrice(imageFiltree);
+            if (imageNG != null) {
+                int[][] imageFiltree = MorphoElementaire.fermeture(imageNG.getMatrice(), tailleMasque);
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                int[][] rougeFiltre = MorphoElementaire.fermeture(rouge, tailleMasque);
+                int[][] vertFiltre = MorphoElementaire.fermeture(vert, tailleMasque);
+                int[][] bleuFiltre = MorphoElementaire.fermeture(bleu, tailleMasque);
+                imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
+        System.out.println("Morpho elementaire fermeture effectuee");
     }//GEN-LAST:event_jMenuItemFermetureActionPerformed
 
     private void jMenuItemReconstructionGeodesiqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemReconstructionGeodesiqueActionPerformed
@@ -1203,12 +1375,28 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
             double v = dialog.getValue();
             int tailleMasque = (int) v;
 
-            int[][] imageFiltree = MorphoComplexe.filtreMedian(imageNG.getMatrice(), tailleMasque);
-            System.out.println("Morpho elementaire erosion effectuee");
-            imageNG.setMatrice(imageFiltree);
+            if (imageNG != null) {
+                int[][] imageFiltree = MorphoComplexe.filtreMedian(imageNG.getMatrice(), tailleMasque);
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                int[][] rougeFiltre = MorphoComplexe.filtreMedian(rouge, tailleMasque);
+                int[][] vertFiltre = MorphoComplexe.filtreMedian(vert, tailleMasque);
+                int[][] bleuFiltre = MorphoComplexe.filtreMedian(bleu, tailleMasque);
+                imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
+        System.out.println("Morpho elementaire erosion effectuee");
     }//GEN-LAST:event_jMenuItemFiltreMedianActionPerformed
 
     private void jMenuItemDilatationGeodesiqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemDilatationGeodesiqueActionPerformed
@@ -1218,15 +1406,39 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
             dialog.setVisible(true);
 
             String text = dialog.getText();
+
+
+            JDialogFiltrageLineaire dialog2 = new JDialogFiltrageLineaire(this,true, "Entrer le nombre d'iterations");
+            dialog2.setVisible(true);
+
+            int nbIterations = Integer.parseInt(dialog2.getText());
+
+
             int[][] masque = MatrixHelper.getIntMatrixFromText(text);
 
 
-            int[][] imageFiltree = MorphoComplexe.dilatationGeodesique(imageNG.getMatrice(), masque, 10);
-            System.out.println("Morpho elementaire erosion effectuee");
-            imageNG.setMatrice(imageFiltree);
+            if (imageNG != null) {
+                int[][] imageFiltree = MorphoComplexe.dilatationGeodesique(imageNG.getMatrice(), masque, nbIterations);
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                int[][] rougeFiltre = MorphoComplexe.dilatationGeodesique(rouge, masque, nbIterations);
+                int[][] vertFiltre = MorphoComplexe.dilatationGeodesique(vert, masque, nbIterations);
+                int[][] bleuFiltre = MorphoComplexe.dilatationGeodesique(bleu, masque, nbIterations);
+                imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
+        System.out.println("Morpho elementaire erosion effectuee");
     }//GEN-LAST:event_jMenuItemDilatationGeodesiqueActionPerformed
 
     private void jMenuItemGradientPrewittActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGradientPrewittActionPerformed
@@ -1239,12 +1451,28 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
             int tailleMasque = (int) v;
 
 
-            int[][] imageFiltree = ContoursLineaire.gradientPrewitt(imageNG.getMatrice(), tailleMasque);
-            System.out.println("Contour lineaire gradient Prewitt effectuee");
-            imageNG.setMatrice(imageFiltree);
+            if (imageNG != null) {
+                int[][] imageFiltree = ContoursLineaire.gradientPrewitt(imageNG.getMatrice(), tailleMasque);
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                int[][] rougeFiltre = ContoursLineaire.gradientPrewitt(rouge, tailleMasque);
+                int[][] vertFiltre = ContoursLineaire.gradientPrewitt(vert, tailleMasque);
+                int[][] bleuFiltre = ContoursLineaire.gradientPrewitt(bleu, tailleMasque);
+                imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
+        System.out.println("Contour lineaire gradient Prewitt effectuee");
     }//GEN-LAST:event_jMenuItemGradientPrewittActionPerformed
 
     private void jMenuItemGradientSobelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGradientSobelActionPerformed
@@ -1257,83 +1485,195 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
             int tailleMasque = (int) v;
 
 
-            int[][] imageFiltree = ContoursLineaire.gradientSobel(imageNG.getMatrice(), tailleMasque);
-            System.out.println("Contour lineaire Sobel effectuee");
-            imageNG.setMatrice(imageFiltree);
+            if (imageNG != null) {
+                int[][] imageFiltree = ContoursLineaire.gradientSobel(imageNG.getMatrice(), tailleMasque);
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                int[][] rougeFiltre = ContoursLineaire.gradientSobel(rouge, tailleMasque);
+                int[][] vertFiltre = ContoursLineaire.gradientSobel(vert, tailleMasque);
+                int[][] bleuFiltre = ContoursLineaire.gradientSobel(bleu, tailleMasque);
+                imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
+        System.out.println("Contour lineaire Sobel effectuee");
     }//GEN-LAST:event_jMenuItemGradientSobelActionPerformed
 
     private void jMenuItemLaplacien4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLaplacien4ActionPerformed
         // TODO add your handling code here:
         try {
 
-            int[][] imageFiltree = ContoursLineaire.laplacien4(imageNG.getMatrice());
-            System.out.println("Contour Laplacien 4 effectue");
-            imageNG.setMatrice(imageFiltree);
+            if (imageNG != null) {
+                int[][] imageFiltree = ContoursLineaire.laplacien4(imageNG.getMatrice());
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                int[][] rougeFiltre = ContoursLineaire.laplacien4(rouge);
+                int[][] vertFiltre = ContoursLineaire.laplacien4(vert);
+                int[][] bleuFiltre = ContoursLineaire.laplacien4(bleu);
+                imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
+        System.out.println("Contour Laplacien 4 effectue");
     }//GEN-LAST:event_jMenuItemLaplacien4ActionPerformed
 
     private void jMenuItemLaplacien8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLaplacien8ActionPerformed
         // TODO add your handling code here:
         try {
 
-            int[][] imageFiltree = ContoursLineaire.laplacien8(imageNG.getMatrice());
-            System.out.println("Contour Laplacien 8 effectue");
-            imageNG.setMatrice(imageFiltree);
+            if (imageNG != null) {
+                int[][] imageFiltree = ContoursLineaire.laplacien8(imageNG.getMatrice());
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                int[][] rougeFiltre = ContoursLineaire.laplacien8(rouge);
+                int[][] vertFiltre = ContoursLineaire.laplacien8(vert);
+                int[][] bleuFiltre = ContoursLineaire.laplacien8(bleu);
+                imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
+        System.out.println("Contour Laplacien 8 effectue");
     }//GEN-LAST:event_jMenuItemLaplacien8ActionPerformed
 
     private void jMenuItemGradientErosionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGradientErosionActionPerformed
         // TODO add your handling code here:
         try {
 
-            int[][] imageFiltree = ContoursNonLineaire.gradientErosion(imageNG.getMatrice());
-            System.out.println("Contour gradient erosion effectue");
-            imageNG.setMatrice(imageFiltree);
+            if (imageNG != null) {
+                int[][] imageFiltree = ContoursNonLineaire.gradientErosion(imageNG.getMatrice());
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                int[][] rougeFiltre = ContoursNonLineaire.gradientErosion(rouge);
+                int[][] vertFiltre = ContoursNonLineaire.gradientErosion(vert);
+                int[][] bleuFiltre = ContoursNonLineaire.gradientErosion(bleu);
+                imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
+        System.out.println("Contour gradient erosion effectue");
     }//GEN-LAST:event_jMenuItemGradientErosionActionPerformed
 
     private void jMenuItemGradientDilatationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGradientDilatationActionPerformed
         // TODO add your handling code here:
         try {
 
-            int[][] imageFiltree = ContoursNonLineaire.gradientDilatation(imageNG.getMatrice());
-            System.out.println("Contour gradient dilatation effectue");
-            imageNG.setMatrice(imageFiltree);
+            if (imageNG != null) {
+                int[][] imageFiltree = ContoursNonLineaire.gradientDilatation(imageNG.getMatrice());
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                int[][] rougeFiltre = ContoursNonLineaire.gradientDilatation(rouge);
+                int[][] vertFiltre = ContoursNonLineaire.gradientDilatation(vert);
+                int[][] bleuFiltre = ContoursNonLineaire.gradientDilatation(bleu);
+                imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
+        System.out.println("Contour gradient dilatation effectue");
     }//GEN-LAST:event_jMenuItemGradientDilatationActionPerformed
 
     private void jMenuItemGradientBeucherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGradientBeucherActionPerformed
         // TODO add your handling code here:
         try {
-            int[][] imageFiltree = ContoursNonLineaire.gradientBeucher(imageNG.getMatrice());
-            System.out.println("Contour gradient Beucher effectue");
-            imageNG.setMatrice(imageFiltree);
+            if (imageNG != null) {
+                int[][] imageFiltree = ContoursNonLineaire.gradientBeucher(imageNG.getMatrice());
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                int[][] rougeFiltre = ContoursNonLineaire.gradientBeucher(rouge);
+                int[][] vertFiltre = ContoursNonLineaire.gradientBeucher(vert);
+                int[][] bleuFiltre = ContoursNonLineaire.gradientBeucher(bleu);
+                imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
+        System.out.println("Contour gradient Beucher effectue");
     }//GEN-LAST:event_jMenuItemGradientBeucherActionPerformed
 
     private void jMenuItemLaplacienNonLineaireActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLaplacienNonLineaireActionPerformed
         // TODO add your handling code here:
         try {
 
-            int[][] imageFiltree = ContoursNonLineaire.laplacienNonLineaire(imageNG.getMatrice());
-            System.out.println("Contour Laplacien non lineaire effectue");
-            imageNG.setMatrice(imageFiltree);
+            if (imageNG != null) {
+                int[][] imageFiltree = ContoursNonLineaire.laplacienNonLineaire(imageNG.getMatrice());
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                int[][] rougeFiltre = ContoursNonLineaire.laplacienNonLineaire(rouge);
+                int[][] vertFiltre = ContoursNonLineaire.laplacienNonLineaire(vert);
+                int[][] bleuFiltre = ContoursNonLineaire.laplacienNonLineaire(bleu);
+                imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
+        System.out.println("Contour Laplacien non lineaire effectue");
     }//GEN-LAST:event_jMenuItemLaplacienNonLineaireActionPerformed
 
     private void jMenuItemSeuillageSimpleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSeuillageSimpleActionPerformed
@@ -1455,10 +1795,26 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
             if (courbeTonale == null) {
                 throw new RuntimeException("Pas de courbe tonale créée");
             }
-            int[][] imageRehaussee = Histogramme.rehaussement(imageNG.getMatrice(), courbeTonale);
-            imageNG.setMatrice(imageRehaussee);
+            if (imageNG != null ) {
+                int[][] imageRehaussee = Histogramme.rehaussement(imageNG.getMatrice(), courbeTonale);
+                imageNG.setMatrice(imageRehaussee);
+            }
+            else if (imageRGB != null) {
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                int[][] rougeFiltre = Histogramme.rehaussement(rouge, courbeTonale);
+                int[][] vertFiltre = Histogramme.rehaussement(vert, courbeTonale);
+                int[][] bleuFiltre = Histogramme.rehaussement(bleu, courbeTonale);
+                imageRGB.setMatricesRGB(rougeFiltre, vertFiltre, bleuFiltre);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
     }//GEN-LAST:event_jMenuItemRehaussementActionPerformed
 
@@ -1487,11 +1843,16 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
     private void jMenuItemCourbeTonaleEgalisationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCourbeTonaleEgalisationActionPerformed
         // TODO add your handling code here:
         try {
-            courbeTonale = Histogramme.creeCourbeTonaleEgalisation(imageNG.getMatrice());
-            System.out.println("Courbe tonale creee");
+            if (imageNG != null) {
+                courbeTonale = Histogramme.creeCourbeTonaleEgalisation(imageNG.getMatrice());
+            }
+            else if (imageRGB != null) {
+                courbeTonale = Histogramme.creeCourbeTonaleEgalisation(imageRGB.getCImageNG().getMatrice());
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
         }
+        System.out.println("Courbe tonale creee");
     }//GEN-LAST:event_jMenuItemCourbeTonaleEgalisationActionPerformed
     
     /**
