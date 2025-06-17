@@ -3,6 +3,8 @@ package ImageProcessing.Lineaire;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
+
 public class FiltrageLineaireGlobalTest {
     private boolean matricesEqual(int[][] a, int[][] b) {
         if (a == null || b == null) return a == b;
@@ -73,7 +75,6 @@ public class FiltrageLineaireGlobalTest {
         FiltrageLineaireGlobal.filtrePasseHautButterworth(new int[][]{{1}}, 1, 0);
     }
 
-    // Les tests fonctionnels nécessitent un mock ou une implémentation de Fourier et Complexe
     // Ici, on vérifie juste que l'appel ne plante pas pour des entrées valides
     @Test
     public void testFiltrePasseBasIdealCall() {
@@ -113,6 +114,43 @@ public class FiltrageLineaireGlobalTest {
             int[][] result = FiltrageLineaireGlobal.filtrePasseHautButterworth(image, 1, 1);
             assertNotNull(result);
         } catch (Exception e) {
+        }
+    }
+
+    @Test
+    public void testFiltragePasseHautDifferentDePasseBas() {
+        int[][] image = {
+            {10, 20, 30},
+            {40, 50, 60},
+            {70, 80, 90}
+        };
+        int[][] passBas = FiltrageLineaireGlobal.filtrePasseBasButterworth(image, 50, 2);
+        int[][] passeHaut = FiltrageLineaireGlobal.filtrePasseHautButterworth(image, 50, 2);
+        
+        // Les deux résultats doivent être différents
+        assertFalse("Passe-haut et passe-bas doivent être différents", 
+                    Arrays.deepEquals(passBas, passeHaut));
+    }
+
+    @Test
+    public void testComplementarite() {
+        // Passe-bas + Passe-haut ≈ Image originale (pour même fréquence)
+        int[][] image = {
+            {10, 20, 30},
+            {40, 50, 60},
+            {70, 80, 90}
+        };
+        int[][] passBas = FiltrageLineaireGlobal.filtrePasseBasButterworth(image, 50, 2);
+        int[][] passeHaut = FiltrageLineaireGlobal.filtrePasseHautButterworth(image, 50, 2);
+        
+        // Vérifier la complémentarité approximative
+        for (int i = 0; i < image.length; i++) {
+            for (int j = 0; j < image[0].length; j++) {
+                int somme = passBas[i][j] + passeHaut[i][j];
+                int original = image[i][j];
+                assertTrue("Complémentarité approximative", 
+                        Math.abs(somme - original) < 10); // Tolérance
+            }
         }
     }
 }
