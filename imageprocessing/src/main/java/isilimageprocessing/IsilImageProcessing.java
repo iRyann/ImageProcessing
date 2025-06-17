@@ -47,6 +47,11 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
     private int[] courbeTonaleG;
     private int[] courbeTonaleB;
 
+    private int[][] imageSeuillee;
+    private int[][] imageSeuilleeR;
+    private int[][] imageSeuilleeG;
+    private int[][] imageSeuilleeB;
+
     /** Creates new form TestCImage2 */
     public IsilImageProcessing() 
     {
@@ -1760,7 +1765,6 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
     }//GEN-LAST:event_jMenuItemLaplacienNonLineaireActionPerformed
 
     private void jMenuItemSeuillageSimpleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSeuillageSimpleActionPerformed
-        // TODO add your handling code here:
         try {
             JDialogFiltrageLineaire dialog = new JDialogFiltrageLineaire(this,true, "Entrer le seuil");
             dialog.setVisible(true);
@@ -1769,16 +1773,32 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
             int seuil = (int) v;
 
 
-            int[][] imageFiltree = Seuillage.seuillageSimple(imageNG.getMatrice(), seuil);
-            System.out.println("Seuillage simple effectue");
-            imageNG.setMatrice(imageFiltree);
+            if (imageNG != null) {
+                int[][] imageFiltree = Seuillage.seuillageSimple(imageNG.getMatrice(), seuil);
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
+
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                imageSeuilleeR = Seuillage.seuillageSimple(rouge, seuil);
+                imageSeuilleeG = Seuillage.seuillageSimple(vert, seuil);
+                imageSeuilleeB = Seuillage.seuillageSimple(bleu, seuil);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
+        System.out.println("Seuillage simple effectue");
     }//GEN-LAST:event_jMenuItemSeuillageSimpleActionPerformed
 
     private void jMenuItemSeuillageDoubleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSeuillageDoubleActionPerformed
-        // TODO add your handling code here:
+
         try {
             JDialogFiltrageLineaire dialog = new JDialogFiltrageLineaire(this,true, "Entrer le premier seuil");
             dialog.setVisible(true);
@@ -1792,25 +1812,55 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
             double v2 = dialog2.getValue();
             int seuil2 = (int) v;
 
+            if (imageNG != null) {
+                int[][] imageFiltree = Seuillage.seuillageDouble(imageNG.getMatrice(), seuil, seuil2);
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
 
-            int[][] imageFiltree = Seuillage.seuillageDouble(imageNG.getMatrice(), seuil, seuil2);
-            System.out.println("Seuillage double effectue");
-            imageNG.setMatrice(imageFiltree);
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                imageSeuilleeR = Seuillage.seuillageDouble(rouge, seuil, seuil2);
+                imageSeuilleeG = Seuillage.seuillageDouble(vert, seuil, seuil2);
+                imageSeuilleeB = Seuillage.seuillageDouble(bleu, seuil, seuil2);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
+        System.out.println("Seuillage double effectue");
     }//GEN-LAST:event_jMenuItemSeuillageDoubleActionPerformed
 
     private void jMenuItemSeuillageAutomatiqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSeuillageAutomatiqueActionPerformed
-        // TODO add your handling code here:
         try {
 
-            int[][] imageFiltree = Seuillage.seuillageAutomatique(imageNG.getMatrice());
-            System.out.println("Seuillage automatique effectue");
-            imageNG.setMatrice(imageFiltree);
+            if (imageNG != null) {
+                int[][] imageFiltree = Seuillage.seuillageAutomatique(imageNG.getMatrice());
+                imageNG.setMatrice(imageFiltree);
+            }
+            else if (imageRGB != null) {
+
+                int largeur = imageRGB.getLargeur();
+                int hauteur = imageRGB.getHauteur();
+                int[][] rouge = new int[largeur][hauteur];
+                int[][] vert = new int[largeur][hauteur];
+                int[][] bleu = new int[largeur][hauteur];
+                imageRGB.getMatricesRGB(rouge, vert, bleu);
+                imageSeuilleeR = Seuillage.seuillageAutomatique(rouge);
+                imageSeuilleeG = Seuillage.seuillageAutomatique(vert);
+                imageSeuilleeB = Seuillage.seuillageAutomatique(bleu);
+            }
         } catch (CImageNGException e) {
             System.out.println("CImageNGException : " + e.getMessage());
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
         }
+        System.out.println("Seuillage automatique effectue");
     }//GEN-LAST:event_jMenuItemSeuillageAutomatiqueActionPerformed
 
     private void jMenuHistogrammeAfficherParamImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuHistogrammeAfficherParamImageActionPerformed
@@ -1850,7 +1900,6 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
     }//GEN-LAST:event_jMenuHistogrammeAfficherParamImageActionPerformed
 
     private void jMenuItemCourbeTonaleLineaireSaturationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCourbeTonaleLineaireSaturationActionPerformed
-        // TODO add your handling code here:
         try {
             JDialogFiltrageLineaire dialog = new JDialogFiltrageLineaire(this,true, "Entrer la saturation minimum");
             dialog.setVisible(true);
@@ -1959,13 +2008,18 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
     }//GEN-LAST:event_jMenuItemApp1ActionPerformed
 
     private void jMenuItemApp2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemApp2ActionPerformed
-        // TODO add your handling code here:
         jMenuItemCourbeTonaleEgalisationActionPerformed(null);
         jMenuItemRehaussementActionPerformed(null);
     }//GEN-LAST:event_jMenuItemApp2ActionPerformed
 
     private void jMenuItemApp3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemApp3ActionPerformed
-        // TODO add your handling code here:
+        try {
+            jMenuItemSeuillageSimpleActionPerformed(null);
+            int[][] zero = new int[imageSeuilleeR.length][imageSeuilleeR[0].length];
+            imageRGB.setMatricesRGB(zero, zero, imageSeuilleeB);
+        } catch (CImageRGBException e) {
+            System.out.println("CImageRGBException : " + e.getMessage());
+        }
     }//GEN-LAST:event_jMenuItemApp3ActionPerformed
 
     private void jMenuItemApp4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemApp4ActionPerformed
@@ -1974,6 +2028,8 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
 
     private void jMenuItemApp5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemApp5ActionPerformed
         // TODO add your handling code here:
+        jMenuItemGradientErosionActionPerformed(null);
+        jMenuItemSeuillageAutomatiqueActionPerformed(null);
     }//GEN-LAST:event_jMenuItemApp5ActionPerformed
 
     private void jMenuItemApp6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemApp6ActionPerformed
@@ -1981,7 +2037,7 @@ public class IsilImageProcessing extends javax.swing.JFrame implements ClicListe
     }//GEN-LAST:event_jMenuItemApp6ActionPerformed
 
     private void jMenuItemApp7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemApp7ActionPerformed
-        // TODO add your handling code here:
+        jMenuItemGradientErosionActionPerformed(null);
     }//GEN-LAST:event_jMenuItemApp7ActionPerformed
     
     /**
