@@ -48,9 +48,10 @@ public class MorphoElementaire {
                         int ni = i + dx;
                         int nj = j + dy;
 
-                        if (ni >= 0 && ni < rows && nj >= 0 && nj < cols) {
-                            if (image[ni][nj] > max) {
-                                max = image[ni][nj];
+                        if (ni >= 0 && ni < rows && nj >= 0 && nj < cols && image[ni][nj] > 0) {
+                            max = image[ni][nj];
+                            if (max == 255) {
+                                break;
                             }
                         }
                     }
