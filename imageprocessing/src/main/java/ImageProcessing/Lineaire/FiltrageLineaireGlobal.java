@@ -118,8 +118,19 @@ public class FiltrageLineaireGlobal {
                 fourierImage.get(i, j).multiplie(new Complexe(h, 0));
             }
         }
-    
-        return MyCast.toIntArray(Fourier.InverseFourier2D(fourierImage).getPartieReelle());
+        int[][] resultat = MyCast.toIntArray(Fourier.InverseFourier2D(fourierImage).getPartieReelle());
+        
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
+                if (resultat[i][j] < 0) {
+                    resultat[i][j] = 0;
+                } else if (resultat[i][j] > 255) {
+                    resultat[i][j] = 255;
+                }
+            }
+        }
+
+        return resultat;
     }
     
     /**
@@ -154,7 +165,7 @@ public class FiltrageLineaireGlobal {
                 double d = Math.sqrt(Math.pow(i, 2) + Math.pow(j, 2));
                 double h;
                 if (d == 0) {
-                    h = 0; // Block DC component
+                    h = 0; 
                 } else {
                     h = 1.0 / (1.0 + Math.pow(frequenceCoupure / d, 2.0 * ordre));
                 }
@@ -163,7 +174,15 @@ public class FiltrageLineaireGlobal {
             }
         }
 
-        return MyCast.toIntArray(Fourier.InverseFourier2D(fourierImage).getPartieReelle());
+         
+        int[][] temp = MyCast.toIntArray(Fourier.InverseFourier2D(fourierImage).getPartieReelle());
+
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
+                // Clamp the values to the range [0, 255]
+                temp[i][j] = Math.max(0, Math.min(255, temp[i][j]));}
+        }
+        return temp;
     }
 
 }
